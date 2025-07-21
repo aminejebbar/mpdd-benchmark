@@ -96,7 +96,7 @@ I've aggregated and cleaned several existing datasets:
 ├── requirements.txt
 └── README.md
 ```
-
+The datasets/ folder has been removed from this Git repository due to file size limitations imposed by GitHub. Some dataset files exceeded the maximum allowed size, preventing successful pushes to the remote repository.
 ## 🚀 Getting Started
 
 ### Prerequisites
