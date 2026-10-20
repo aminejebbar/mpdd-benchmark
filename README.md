@@ -1,155 +1,137 @@
-# MPDD: A Comprehensive Benchmark for Malicious Prompt Detection
-## From Classical ML to Transformers
+# MPDD — Malicious Prompt Detection Dataset
 
-[![Dataset](https://img.shields.io/badge/Dataset-Kaggle-blue)](https://www.kaggle.com/datasets/mohammedaminejebbar/malicious-prompt-detection-dataset-mpdd)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
+Balanced benchmark dataset and comparison of 13 models, from logistic regression to DeBERTa.
 
-> **⚠️ This repository is currently under active development**
+![Dataset](https://img.shields.io/badge/Dataset-Kaggle-blue)
 
-**Author:** Mohammed Amine Jebbar - Independent Researcher
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-## 🎯 What's This About?
+![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)
 
-I've been working on something that I think is pretty important for AI safety - detecting malicious prompts before they can cause harm. This project introduces **MPDD**, a balanced dataset of 40k prompts (well, 39,234 to be exact) where half are malicious and half are benign.
+**Author:** Mohammed Amine Jebbar
 
-The main goal here is simple: figure out which machine learning approaches work best for catching bad prompts. I've tested everything from basic models to state-of-the-art transformers to see what actually performs in the real world.
+---
 
-## 🔬 Research Objective
+## What this is
 
-The study aims to answer a fundamental question: **What's the most effective approach for detecting malicious prompts?**
+A dataset of 39,234 prompts, split evenly between malicious (jailbreaks, prompt injections, harmful requests) and benign, aggregated from four public sources, deduplicated and preprocessed. Alongside it, the benchmark code I used to compare 13 models on the same task.
 
-I've divided this into three main categories of models to get a complete picture:
-- **Classical ML** (the reliable workhorses)
-- **Deep Learning** (the complex middle ground)  
-- **Transformers** (the current SOTA)
+I built it to answer a question I couldn't find a clean answer to: **which approach actually catches malicious prompts, and at what cost?**
 
-## 🤖 Models I've Tested
+---
 
-### Classical ML Models
-- Logistic Regression
-- Linear SVM
-- Random Forest
-- XGBoost
-- Naive Bayes
-- Dummy Classifier (baseline)
+## The dataset
 
-### Deep Learning Models
-- Multi-Layer Perceptron (MLP)
-- Long Short-Term Memory (LSTM)
-- Convolutional Neural Network (CNN)
+|               |                                                      |
+| ------------- | ---------------------------------------------------- |
+| Samples       | 39,234                                               |
+| Balance       | 50% malicious / 50% benign                           |
+| Sources       | 4 public datasets (below)                            |
+| Preprocessing | Deduplicated, cleaned, standardised                  |
+| Format        | CSV + pickle (`processed_data/MPDD.csv`, `MPDD.pkl`) |
 
-### Transformer Models
-- BERT (bert-base-uncased)
-- RoBERTa (roberta-base)
-- DistilBERT (distilbert-base-uncased)
-- DeBERTa (microsoft/deberta-base)
+### Source datasets
 
-## 📊 Dataset: MPDD
-
-The **Malicious Prompt Detection Dataset (MPDD)** is a carefully curated collection of 39,234 prompts, perfectly balanced between malicious and benign examples. I've spent considerable time cleaning and deduplicating content from multiple sources to create something that's actually useful for research.
-
-**Key Features:**
-- 🎯 **Balanced**: 50% malicious, 50% benign
-- 🧹 **Clean**: Deduplicated and preprocessed
-- 📈 **Large**: 40k samples for robust training
-- 🔄 **Diverse**: Multiple source datasets combined
-
-**Available on Kaggle:** [Malicious Prompt Detection Dataset](https://www.kaggle.com/datasets/mohammedaminejebbar/malicious-prompt-detection-dataset-mpdd)
-
-### Source Datasets
-I've aggregated and cleaned several existing datasets:
-- [Prompt Injection in the Wild - PredictionGuard](https://www.kaggle.com/datasets/arielzilber/prompt-injection-in-the-wild)
+- [Prompt Injection in the Wild — PredictionGuard](https://www.kaggle.com/datasets/arielzilber/prompt-injection-in-the-wild)
 - [Prompt Injection Malignant](https://www.kaggle.com/datasets/marycamilainfo/prompt-injection-malignant)
 - [LLM 7 Prompt Training Dataset](https://www.kaggle.com/datasets/carlmcbrideellis/llm-7-prompt-training-dataset)
-- [Quora Question Pairs Dataset](https://www.kaggle.com/datasets/quora/question-pairs-dataset)
+- [Quora Question Pairs](https://www.kaggle.com/datasets/quora/question-pairs-dataset)
 
-## 📁 Project Structure
+The creation process is documented in [`notebooks/malicious_prompt_detection_dataset_creation.ipynb`](notebooks/malicious_prompt_detection_dataset_creation.ipynb).
+
+---
+
+## Models benchmarked
+
+| Family        | Models                                                                                 | Count |
+| ------------- | -------------------------------------------------------------------------------------- | ----- |
+| Classical ML  | Logistic Regression, Linear SVM, Random Forest, XGBoost, Naive Bayes, Dummy (baseline) | 6     |
+| Deep learning | MLP, LSTM, CNN                                                                         | 3     |
+| Transformers  | BERT, RoBERTa, DistilBERT, DeBERTa                                                     | 4     |
+
+---
+
+## Results
+
+The full numbers live in `experiments/results_deep_models.csv` and `experiments/results_transformers.csv`. Comparison plots are in `experiments/`.
+
+**Headline finding:** classical models perform better than their reputation suggests, and the transformer gain over them is smaller than the cost difference.
+
+> Full table to be added here from the CSVs above.
+
+---
+
+## Repository layout
 
 ```
 .
-├── datasets/                    # Raw datasets from various sources
-│   ├── forbidden_question_set_df.csv
-│   ├── jailbreak_prompts.csv
-│   ├── malicous_deepset.csv
-│   ├── malignant.csv
-│   ├── predictionguard_df.csv
-│   └── question_pairs_dataset.csv
-├── experiments/                 # All the ML experiments
-│   ├── baseline_models.ipynb   # Classical ML models training
-│   ├── deep_models.py          # Deep learning experiments
-│   ├── deep_models_comparison.png
-│   ├── results/                # Transformer model outputs (empty for now)
-│   │   ├── bert-base-uncased/
-│   │   ├── distilbert-base-uncased/
-│   │   ├── microsoft_deberta-base/
-│   │   └── roberta-base/
+├── datasets/              # Raw sources (removed from git — file size limits)
+├── experiments/
+│   ├── baseline_models.ipynb        # Classical ML
+│   ├── deep_models.py               # Deep learning
+│   ├── transformer_models.ipynb     # Transformers
 │   ├── results_deep_models.csv
 │   ├── results_transformers.csv
-│   ├── transformer_models.ipynb
-│   └── transformers_models_comparison.png
+│   └── *.png                        # Comparison plots
 ├── notebooks/
-│   └── malicious_prompt_detection_dataset_creation.ipynb  # Dataset creation process
-├── processed_data/             # The final MPDD dataset
-│   ├── MPDD.csv
-│   └── MPDD.pkl
+│   └── malicious_prompt_detection_dataset_creation.ipynb
+├── processed_data/        # MPDD.csv, MPDD.pkl
 ├── requirements.txt
 └── README.md
 ```
-The datasets/ folder has been removed from this Git repository due to file size limitations imposed by GitHub. Some dataset files exceeded the maximum allowed size, preventing successful pushes to the remote repository.
-## 🚀 Getting Started
 
-### Prerequisites
+Note: `datasets/` is not in the repository — several source files exceed GitHub's size limit. They are all linked above.
+
+---
+
+## Reproduce
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### Quick Start
-1. **Dataset Creation**: Check out `notebooks/malicious_prompt_detection_dataset_creation.ipynb` to see how I built MPDD
-2. **Classical ML**: Run `experiments/baseline_models.ipynb` for traditional approaches
-3. **Deep Learning**: Execute `experiments/deep_models.py` for neural network experiments  
-4. **Transformers**: Use `experiments/transformer_models.ipynb` for SOTA models
-
-## 📈 Initial Results (Spoiler Alert)
-
-Without giving too much away, I've found some pretty interesting patterns:
-- Classical models perform surprisingly well
-- There are some unexpected results in the deep learning category
-- Transformers deliver as expected, but the cost-benefit trade-off is worth discussing
-
-Full results and analysis coming soon in the research paper!
-
-## 🔄 Current Status
-
-- [x] Dataset collection and preprocessing
-- [x] Classical ML experiments completed
-- [x] Deep learning experiments completed  
-- [x] Transformer experiments completed
-- [ ] Comprehensive analysis and paper writing
-- [ ] Code cleanup and documentation
-- [ ] Results visualization improvements
-
-## 📝 Citation (Coming Soon)
-
-This work is being prepared for academic publication. Citation format will be updated once submitted.
-
-## 🤝 Contributing
-
-This is primarily a research project, but I'm always open to discussions and suggestions! Feel free to:
-- Open issues for questions or suggestions
-- Reach out if you're working on similar problems
-- Share your own experiments with the dataset
-
-## 📧 Contact
-
-Mohammed Amine Jebbar - Independent Researcher
-- **Kaggle**: [mohammedaminejebbar](https://www.kaggle.com/mohammedaminejebbar)
-- **LinkedIn**: [Connect with me](https://www.linkedin.com/in/codebyamine/)
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+1. Dataset creation — `notebooks/malicious_prompt_detection_dataset_creation.ipynb`
+2. Classical ML — `experiments/baseline_models.ipynb`
+3. Deep learning — `experiments/deep_models.py`
+4. Transformers — `experiments/transformer_models.ipynb`
 
 ---
 
-*"Building safer AI, one prompt at a time."*
+## Used in research
+
+If you use MPDD, I'd like to know — it's the only way I find out.
+
+- **BAGEL** (Hassan et al., 2026) uses MPDD as one of nine core datasets. The authors report outperforming OpenAI's Moderation API and ShieldGemma (F1 = 0.92).
+- **Information / MDPI** (Kushnerov et al., 2026) uses MPDD as its main dataset in a benchmarking study of eight neural architectures against adversarial attacks.
+- **Procedia Computer Science** (Vyas et al., 2026) uses it in work on sanitising malicious prompts rather than only flagging them.
+- **GuardNet** (Neves et al., 2026) references results obtained on MPDD when benchmarking lightweight guardrail models.
+
+---
+
+## Status
+
+Done:
+
+- [x] Dataset collection, cleaning, deduplication
+- [x] Classical ML benchmarks
+- [x] Deep learning benchmarks
+- [x] Transformer benchmarks
+
+Not done:
+
+- [ ] Results table in this README
+- [ ] Write-up of the analysis
+- [ ] Code cleanup
+
+---
+
+## Contact
+
+- **Kaggle**: [mohammedaminejebbar](https://www.kaggle.com/mohammedaminejebbar)
+- **LinkedIn**: [Amine Jebbar](https://www.linkedin.com/in/codebyamine/)
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE).
